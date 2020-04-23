@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+option go_package = ".;pb";
+
+message SSRFAssignRequest {
+    string domain = 1;
+    uint32 ttl = 4;
+    bool replaceOk = 5;
+}
+
+message SSRFReleaseRequest {
+    string domain = 1;
+
+}
+
+service SSRFRegistryService {
+    rpc Assign (SSRFAssignRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          post: "/v1/ssrf/assign"
+          body: "*"
+        };
+    }
+    rpc Release (SSRFReleaseRequest) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+          post: "/v1/ssrf/release"
+          body: "*"
+        };
+    }
+}

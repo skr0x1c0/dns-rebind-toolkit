@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/empty.proto";
+option go_package = ".;pb";
+
+message DnsAssignRequest {
+    string domain = 1;
+    bytes ip4 = 2;
+    bytes ip6 = 3;
+    uint32 ttl = 4;
+    bool replaceOk = 5;
+}
+
+message DnsReleaseRequest {
+    string domain = 1;
+}
+
+service DnsRegistryService {
+    rpc Assign (DnsAssignRequest) returns (google.protobuf.Empty);
+    rpc Release (DnsReleaseRequest) returns (google.protobuf.Empty);
+}

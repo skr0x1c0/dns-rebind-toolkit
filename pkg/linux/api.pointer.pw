@@ -1,0 +1,7 @@
+server {
+    server_name api.pointer.pw api.pointer.pw;
+
+    location / {
+        proxy_pass http://localhost:8082;
+    }
+}
