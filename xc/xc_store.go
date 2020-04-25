@@ -2,7 +2,7 @@ package main
 
 import "sync"
 
-type Session struct {
+type XCLoginResult struct {
 	Session   string `json:"session"`
 	User      string `json:"user"`
 	UserId    int    `json:"user_id"`
@@ -11,13 +11,13 @@ type Session struct {
 }
 
 type XCStore interface {
-	GetSession() (Session, error)
-	SetSession(session Session)
+	GetSession() (XCLoginResult, error)
+	SetSession(session XCLoginResult)
 }
 
 type inMemoryXCStore struct {
 	mu      sync.Mutex
-	session *Session
+	session *XCLoginResult
 }
 
 func NewInMemoryXCStore() XCStore {
@@ -27,18 +27,18 @@ func NewInMemoryXCStore() XCStore {
 	}
 }
 
-func (i *inMemoryXCStore) GetSession() (Session, error) {
+func (i *inMemoryXCStore) GetSession() (XCLoginResult, error) {
 	i.mu.Lock()
 	defer i.mu.Unlock()
 
 	if i.session == nil {
-		return Session{}, ErrorInvalidSession
+		return XCLoginResult{}, ErrorInvalidSession
 	}
 
 	return *i.session, nil
 }
 
-func (i *inMemoryXCStore) SetSession(session Session) {
+func (i *inMemoryXCStore) SetSession(session XCLoginResult) {
 	i.mu.Lock()
 	defer i.mu.Unlock()
 

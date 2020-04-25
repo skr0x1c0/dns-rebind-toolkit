@@ -82,7 +82,7 @@ func (x *XCClient) doLogin() error {
 		return fmt.Errorf("cannot login, status %s, error %s", resp.Status, string(body))
 	}
 
-	data := Session{}
+	data := XCLoginResult{}
 	if err := json.Unmarshal(body, &data); err != nil || data.Session == "" {
 		return fmt.Errorf("login failed, error %s", string(body))
 	}
