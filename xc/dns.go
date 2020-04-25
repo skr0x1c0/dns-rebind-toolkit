@@ -10,6 +10,10 @@ import (
 	"regexp"
 )
 
+const (
+	DnsSubdomainLength int = 12
+)
+
 var namePattern = regexp.MustCompilePOSIX("^[A-Za-z0-9]+$")
 
 type assignSubdomainRequest struct {
@@ -113,7 +117,7 @@ func ReleaseDnsSubdomain(name string) error {
 }
 
 func BuildDnsDomain(name string) (string, error) {
-	if len(name) != 12 || !namePattern.MatchString(name) {
+	if len(name) != DnsSubdomainLength || !namePattern.MatchString(name) {
 		return "", fmt.Errorf("invalid name %s", name)
 	}
 
