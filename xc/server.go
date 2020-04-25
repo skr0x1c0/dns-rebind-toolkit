@@ -220,7 +220,7 @@ func logging() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
-				Logger.Info(r.Method, r.URL.Path, r.RemoteAddr, r.UserAgent())
+				Logger.Infow(r.Method, " ", r.URL.Path, " ", r.RemoteAddr, " ", r.UserAgent())
 			}()
 			next.ServeHTTP(w, r)
 		})
