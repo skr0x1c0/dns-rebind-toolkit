@@ -14,6 +14,7 @@ const (
 )
 
 type Session struct {
+	id            string
 	dnsSdName     string
 	payloadSize   uint64
 	sleepDuration time.Duration

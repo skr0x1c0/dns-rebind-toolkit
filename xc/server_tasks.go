@@ -52,8 +52,8 @@ func (t *TaskManager) start(ctx context.Context) {
 
 		for {
 			select {
-			case session := <-t.xcQueue:
-				t.handleXCQueueTask(session)
+			case session := <-t.dnsQueue:
+				t.handleDnsQueueTask(session)
 			case <-ctx.Done():
 				return
 			}
@@ -62,6 +62,9 @@ func (t *TaskManager) start(ctx context.Context) {
 }
 
 func (t *TaskManager) handleXCQueueTask(session *Session) {
+	Logger.Debug("handling xc task for ", session.id)
+	defer Logger.Debug("done handling xc task for ", session.id)
+
 	err := t.xcClient.TriggerNegativeCache(BuildDnsHost(session.dnsSdName))
 
 	session.mu.Lock()
@@ -73,11 +76,15 @@ func (t *TaskManager) handleXCQueueTask(session *Session) {
 	result := XCNegativeCacheResult{}
 	result.err = err
 	result.time = time.Now()
+	session.negCacheRes = &result
 
 	t.dnsQueue <- session
 }
 
 func (t *TaskManager) handleDnsQueueTask(session *Session) {
+	Logger.Debug("handling dns task for ", session.id)
+	defer Logger.Debug("done handling dns task for ", session.id)
+
 	err := AssignDnsSubdomain(session.dnsSdName)
 
 	session.mu.Lock()
@@ -89,8 +96,9 @@ func (t *TaskManager) handleDnsQueueTask(session *Session) {
 	result := DnsRegistrationResult{}
 	result.err = err
 	result.time = time.Now()
+	session.dnsRegRes = &result
 }
 
 func (t *TaskManager) Submit(session *Session) {
-	t.dnsQueue <- session
+	t.xcQueue <- session
 }

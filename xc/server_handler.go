@@ -13,7 +13,7 @@ import (
 
 const (
 	MaxSleepDuration time.Duration = time.Second * 15
-	SessionIdLength  int           = 64
+	SessionIdLength  int           = 32
 )
 
 type ServerHandler struct {
@@ -69,6 +69,7 @@ func (s *ServerHandler) HandleNewSession(writer http.ResponseWriter, request *ht
 	dnsSdName := GenerateRandomName(DnsSubdomainLength)
 
 	session := &Session{
+		id:            sessionId,
 		dnsSdName:     dnsSdName,
 		payloadSize:   payloadSize,
 		sleepDuration: sleepDuration,
