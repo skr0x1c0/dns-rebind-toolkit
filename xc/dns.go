@@ -123,3 +123,7 @@ func BuildDnsDomain(name string) (string, error) {
 
 	return name + ".dns.pointer.pw", nil
 }
+
+func BuildDnsHost(name string) string {
+	return name + ".dns.pointer.pw"
+}

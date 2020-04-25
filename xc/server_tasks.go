@@ -13,8 +13,8 @@ type TaskManager struct {
 
 func NewTaskManager(ctx context.Context, config XCConfig) *TaskManager {
 	manager := &TaskManager{
-		xcQueue:  make(chan *Session),
-		dnsQueue: make(chan *Session),
+		xcQueue:  make(chan *Session, 8),
+		dnsQueue: make(chan *Session, 8),
 		xcClient: NewXCClient(config),
 	}
 	manager.start(ctx)
@@ -63,6 +63,8 @@ func (t *TaskManager) handleXCQueueTask(session *Session) {
 	result := XCNegativeCacheResult{}
 	result.err = err
 	result.time = time.Now()
+
+	t.dnsQueue <- session
 }
 
 func (t *TaskManager) handleDnsQueueTask(session *Session) {
@@ -77,4 +79,8 @@ func (t *TaskManager) handleDnsQueueTask(session *Session) {
 	result := DnsRegistrationResult{}
 	result.err = err
 	result.time = time.Now()
+}
+
+func (t *TaskManager) Submit(session *Session) {
+	t.dnsQueue <- session
 }

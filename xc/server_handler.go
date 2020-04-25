@@ -18,6 +18,7 @@ const (
 
 type ServerHandler struct {
 	context      context.Context
+	taskManager  *TaskManager
 	sessionStore SessionStore
 }
 
@@ -75,6 +76,7 @@ func (s *ServerHandler) HandleNewSession(writer http.ResponseWriter, request *ht
 		return NewInternalError("cannot set session in session store", err)
 	}
 
+	s.taskManager.Submit(session)
 	http.Redirect(writer, request, "/redirect?session="+sessionId, 302)
 	return nil
 }

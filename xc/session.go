@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/url"
+	"sync"
 	"time"
 )
 
@@ -20,6 +21,7 @@ type Session struct {
 	targetPort    uint16
 	targetScheme  Scheme
 
+	mu          sync.Mutex
 	negCacheRes *XCNegativeCacheResult
 	dnsRegRes   *DnsRegistrationResult
 
