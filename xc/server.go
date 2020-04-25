@@ -36,6 +36,12 @@ func NewHandler(ctx context.Context, serverConfig ServerConfig, xcConfig XCConfi
 }
 
 func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) (ok bool) {
+	if request.Method != http.MethodGet {
+		Logger.Debug("Ignoring request method %s", request.Method)
+		writer.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	if userAgent := request.Header.Get("User-Agent"); strings.Index(userAgent, "Java") != 0 {
 		Logger.Debug("Ignoring request from %s", userAgent)
 		writer.WriteHeader(200)
