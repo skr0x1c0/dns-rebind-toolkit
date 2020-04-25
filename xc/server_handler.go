@@ -106,7 +106,7 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 		elapsed := time.Now().Sub(requestTime)
 		toSleep := MaxResponseTime - elapsed
 		if toSleep > 0 {
-			Logger.Info("sleeping and returning after %s", toSleep.String())
+			Logger.Info("sleeping and returning after ", toSleep.String())
 			time.Sleep(toSleep)
 		}
 
