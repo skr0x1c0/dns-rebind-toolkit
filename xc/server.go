@@ -59,6 +59,8 @@ func makeHttpHandler(handler *ServerHandler) http.Handler {
 		}
 
 		switch e := err.(type) {
+		case nil:
+			return
 		case *BadRequest:
 			Logger.Debug("got bad request, msg: %s", e.msg)
 			http.Error(w, e.msg, http.StatusBadRequest)
