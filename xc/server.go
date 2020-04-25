@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"math"
 	"net/http"
 	"net/url"
@@ -139,7 +140,8 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 	if pendingSleepDuration < 250*time.Millisecond {
 		username := strings.Repeat("u", payloadSize/2)
 		password := strings.Repeat("p", payloadSize-len(username))
-		format := scheme + "://" + "username:password@" + dnsDomain + ":" + strconv.Itoa(port) + "/" + target.String()
+		format := fmt.Sprintf("%s://u{%d}:p{%d}@%s:%d/%s",
+			scheme, len(username), len(password), dnsDomain, port, target.String())
 		Logger.Info("final redirect to %s", format)
 		return redirectTo(scheme + "://" + username + ":" + password + "@" + dnsDomain +
 			":" + strconv.Itoa(port) + "/" + target.String())
