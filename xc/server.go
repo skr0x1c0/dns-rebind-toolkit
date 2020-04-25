@@ -36,7 +36,8 @@ func NewHandler(ctx context.Context, serverConfig ServerConfig, xcConfig XCConfi
 }
 
 func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) (ok bool) {
-	if request.Header.Get("User-Agent") != "Java/1.8.0_252" {
+	if userAgent := request.Header.Get("User-Agent"); strings.Index(userAgent, "Java") != 0 {
+		Logger.Debug("Ignoring request from %s", userAgent)
 		writer.WriteHeader(200)
 		return
 	}
