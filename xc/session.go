@@ -27,8 +27,3 @@ type Session struct {
 
 	startTime *time.Time
 }
-
-type DnsRegistrationResult struct {
-	err  error
-	time time.Time
-}

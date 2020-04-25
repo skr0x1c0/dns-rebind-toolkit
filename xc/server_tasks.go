@@ -11,6 +11,16 @@ type TaskManager struct {
 	xcClient *XCClient
 }
 
+type XCNegativeCacheResult struct {
+	err  error
+	time time.Time
+}
+
+type DnsRegistrationResult struct {
+	err  error
+	time time.Time
+}
+
 func NewTaskManager(ctx context.Context, config XCConfig) *TaskManager {
 	manager := &TaskManager{
 		xcQueue:  make(chan *Session, 8),

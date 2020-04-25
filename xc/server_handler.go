@@ -22,6 +22,14 @@ type ServerHandler struct {
 	sessionStore SessionStore
 }
 
+func NewServerHandler(ctx context.Context, config XCConfig) *ServerHandler {
+	return &ServerHandler{
+		context:      ctx,
+		taskManager:  NewTaskManager(ctx, config),
+		sessionStore: NewInMemorySessionStore(),
+	}
+}
+
 func (s *ServerHandler) HandleNewSession(writer http.ResponseWriter, request *http.Request) error {
 	getQuery := func(key string, def string) string {
 		q := request.URL.Query().Get(key)
