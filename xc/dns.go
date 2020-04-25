@@ -33,16 +33,16 @@ func NewDnsSubdomainManager(ctx context.Context) *DnsSubdomainManager {
 }
 
 func (d *DnsSubdomainManager) start() {
-	fmt.Println("Start dns subdomain manager")
-	defer fmt.Println("Stop dns subdomain manager")
+	Logger.Info("Start dns subdomain manager")
+	defer Logger.Info("Stop dns subdomain manager")
 	for {
 		select {
 		case name := <-d.req:
-			fmt.Printf("Assigning subdomain %s\n", name)
+			Logger.Debugf("Assigning subdomain %s", name)
 			if err := AssignDnsSubdomain(name); err != nil {
-				fmt.Println("cannot assign dns subdomain, error " + err.Error())
+				Logger.Debug("cannot assign dns subdomain, error " + err.Error())
 			}
-			fmt.Printf("Assigned subdomain %s\n", name)
+			Logger.Debugf("Assigned subdomain %s", name)
 		case <-d.ctx.Done():
 			return
 		}
