@@ -3,12 +3,9 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
-	"log"
 	"math"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -46,13 +43,13 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 	reqTime := time.Now()
 
 	badRequest := func(msg string) bool {
-		fmt.Printf("Bad request, %s\n", msg)
+		Logger.Debugf("Bad request, %s", msg)
 		http.Error(writer, msg, http.StatusBadRequest)
 		return false
 	}
 
 	internalError := func(msg string) bool {
-		fmt.Printf("internal error, %s\n", msg)
+		Logger.Errorf("internal error, %s", msg)
 		http.Error(writer, msg, http.StatusInternalServerError)
 		return false
 	}
@@ -77,7 +74,6 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 
 	payloadSize, err := strconv.Atoi(getQuery("payloadSize", strconv.Itoa(25*MB)))
 	if err != nil || payloadSize > MaxPayloadSize {
-		fmt.Printf("%+v\n", err)
 		return badRequest("invalid payload size")
 	}
 
@@ -103,7 +99,7 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 		session = GenerateRandomName(12)
 		dnsDomain, err = BuildDnsDomain(session)
 		AssertOk(err)
-		fmt.Printf("Generated new session %s\n", session)
+		Logger.Debugf("Generated new session %s", session)
 		if err := h.xcManager.Submit(session); err != nil {
 			return internalError("session submit error")
 		}
@@ -122,7 +118,7 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 	if !status.done {
 		startTime = time.Now().Unix()
 	} else if status.err != nil {
-		fmt.Printf("negative cache trigger failed, error %s\n", status.err)
+		Logger.Errorf("negative cache trigger failed, error %s", status.err)
 		return internalError("cannot trigger negative cache")
 	} else {
 		startTime = status.time.Unix()
@@ -141,11 +137,10 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 
 	pendingSleepDuration := time.Duration(sleepDuration) - elapsedTime
 	if pendingSleepDuration < 250*time.Millisecond {
-		fmt.Println("Executing final redirect")
 		username := strings.Repeat("u", payloadSize/2)
 		password := strings.Repeat("p", payloadSize-len(username))
 		format := scheme + "://" + "username:password@" + dnsDomain + ":" + strconv.Itoa(port) + "/" + target.String()
-		fmt.Printf("final redirect to %s\n", format)
+		Logger.Info("final redirect to %s", format)
 		return redirectTo(scheme + "://" + username + ":" + password + "@" + dnsDomain +
 			":" + strconv.Itoa(port) + "/" + target.String())
 	}
@@ -157,7 +152,7 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 	}
 
 	if sleepNowDuration > 0 {
-		fmt.Printf("Sleeping for %d\n", sleepNowDuration)
+		Logger.Infof("Sleeping for %d", sleepNowDuration)
 		time.Sleep(sleepNowDuration)
 	}
 
@@ -172,7 +167,7 @@ func (h *handler) handleHTTP(writer http.ResponseWriter, request *http.Request) 
 	values.Set("random", GenerateRandomName(12))
 
 	redirectUrl := "http://" + h.config.Address + "/redirect?" + values.Encode()
-	fmt.Printf("Redirect to %s\n", redirectUrl)
+	Logger.Infof("Redirect to %s", redirectUrl)
 	return redirectTo(redirectUrl)
 }
 
@@ -182,6 +177,9 @@ func (h *handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 
 func main() {
 	address := flag.String("address", "172.16.146.1:8085", "server address")
+	xcRoot := flag.String("xcRoot", "http://172.16.66.130", "oxc server root url")
+	xcUser := flag.String("xcUser", "testuser", "oxc username")
+	xcPassword := flag.String("xcPassword", "secret", "oxc user password")
 	flag.Parse()
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -190,32 +188,30 @@ func main() {
 	handler := NewHandler(ctx, ServerConfig{
 		Address: *address,
 	}, XCConfig{
-		Root:     "http://172.16.66.130",
-		Username: "testuser",
-		Password: "secret",
+		Root:     *xcRoot,
+		Username: *xcUser,
+		Password: *xcPassword,
 	})
 
-	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
 	server := &http.Server{
 		Addr:         *address,
-		Handler:      logging(logger)(handler),
-		ErrorLog:     logger,
+		Handler:      logging()(handler),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  15 * time.Second,
 	}
 
-	fmt.Printf("Start server at %s\n", *address)
+	Logger.Info("Start server at %s\n", *address)
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}
 }
 
-func logging(logger *log.Logger) func(http.Handler) http.Handler {
+func logging() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
-				logger.Println(r.Method, r.URL.Path, r.RemoteAddr, r.UserAgent())
+				Logger.Info(r.Method, r.URL.Path, r.RemoteAddr, r.UserAgent())
 			}()
 			next.ServeHTTP(w, r)
 		})
