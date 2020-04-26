@@ -86,8 +86,7 @@ func (s *ServerHandler) HandleNewSession(writer http.ResponseWriter, request *ht
 	}
 
 	s.taskManager.Submit(session)
-	http.Redirect(writer, request, "/redirect?session="+sessionId, 302)
-	return nil
+	return s.absoluteRedirectTo(writer, request, "redirect?session="+sessionId, 302)
 }
 
 func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http.Request) error {
@@ -111,8 +110,7 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 			time.Sleep(toSleep)
 		}
 
-		http.Redirect(writer, request, "/redirect?session="+sessionId, 302)
-		return nil
+		return s.absoluteRedirectTo(writer, request, "redirect?session="+sessionId, 302)
 	}
 
 	if session.negCacheRes == nil {
@@ -152,5 +150,10 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 	http.Redirect(writer, request, string(scheme)+"://"+username+":"+password+"@"+host+
 		":"+strconv.Itoa(int(port))+"/"+path.String(), 302)
 
+	return nil
+}
+
+func (s *ServerHandler) absoluteRedirectTo(w http.ResponseWriter, r *http.Request, path string, code int) error {
+	http.Redirect(w, r, "http://"+r.Host+"/"+path, code)
 	return nil
 }
