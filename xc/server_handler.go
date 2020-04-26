@@ -102,9 +102,13 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 		return NewBadRequest("session not registered")
 	}
 
-	sleepAndComeback := func() error {
+	sleepAndComeback := func(maxDuration time.Duration) error {
 		elapsed := time.Now().Sub(requestTime)
 		toSleep := MaxResponseTime - elapsed
+		if maxDuration > 0 && toSleep > maxDuration {
+			toSleep = maxDuration
+		}
+
 		if toSleep > 0 {
 			Logger.Info("sleeping and returning after ", toSleep.String())
 			time.Sleep(toSleep)
@@ -114,7 +118,7 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 	}
 
 	if session.negCacheRes == nil {
-		return sleepAndComeback()
+		return sleepAndComeback(0)
 	}
 
 	if session.negCacheRes.err != nil {
@@ -127,8 +131,9 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 		return NewInternalError("cannot register dns subdomain", session.dnsRegRes.err)
 	}
 
-	if time.Now().Sub(startTime) > time.Millisecond*250 {
-		return sleepAndComeback()
+	diff := session.sleepDuration - time.Now().Sub(startTime)
+	if diff > time.Millisecond*250 {
+		return sleepAndComeback(diff)
 	}
 
 	if session.dnsRegRes == nil || session.dnsRegRes.err != nil {
