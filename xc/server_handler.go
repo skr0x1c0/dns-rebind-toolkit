@@ -91,6 +91,11 @@ func (s *ServerHandler) HandleNewSession(writer http.ResponseWriter, request *ht
 
 func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http.Request) error {
 	requestTime := time.Now()
+	if ua := request.Header.Get("User-Agent"); strings.Index(ua, "Java") != 0 {
+		Logger.Debug("ignoring request from ", ua)
+		writer.WriteHeader(http.StatusOK)
+		return nil
+	}
 
 	sessionId := request.URL.Query().Get("session")
 	if len(sessionId) != SessionIdLength {
