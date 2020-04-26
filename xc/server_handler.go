@@ -144,7 +144,7 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 	port := session.targetPort
 	scheme := session.targetScheme
 	path := session.targetUrl
-	host := session.dnsSdName + ".dns.pointer.pw"
+	host := BuildDnsHost(session.dnsSdName)
 	username := strings.Repeat("u", int(payloadSize/2))
 	password := strings.Repeat("p", int(payloadSize)-len(username))
 
