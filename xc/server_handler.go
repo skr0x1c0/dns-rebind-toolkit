@@ -54,7 +54,8 @@ func (s *ServerHandler) HandleNewSession(writer http.ResponseWriter, request *ht
 		return NewBadRequest("invalid targetScheme")
 	}
 
-	payloadSize, err := strconv.ParseUint(getQuery("payloadSize", strconv.Itoa(25*MB)), 10, 64)
+	payloadSize, err := strconv.ParseUint(getQuery("payloadSize", "25"), 10, 64)
+	payloadSize = payloadSize * MB
 	if err != nil || payloadSize > MaxPayloadSize {
 		return NewBadRequest("invalid payload size")
 	}
