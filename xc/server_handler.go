@@ -150,7 +150,7 @@ func (s *ServerHandler) HandleRedirect(writer http.ResponseWriter, request *http
 
 	format := fmt.Sprintf("%s://u{%d}:p{%d}@%s:%d/%s",
 		session.targetScheme, len(username), len(password), host, port, path.String())
-	Logger.Info("final redirect to %s", format)
+	Logger.Info("final redirect to ", format)
 
 	http.Redirect(writer, request, string(scheme)+"://"+username+":"+password+"@"+host+
 		":"+strconv.Itoa(int(port))+"/"+path.String(), 302)

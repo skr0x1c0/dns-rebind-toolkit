@@ -38,7 +38,7 @@ func main() {
 		IdleTimeout:  15 * time.Second,
 	}
 
-	Logger.Info("Start server at %s\n", *address)
+	Logger.Info("Start server at ", *address)
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}
