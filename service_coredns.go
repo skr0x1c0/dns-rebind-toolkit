@@ -30,7 +30,7 @@ func (d *dnsServer) respondA(domain string) (dns.RR, error) {
 		Time:  time.Now(),
 		Rcode: dns.RcodeServerFailure,
 	}
-	defer d.log.Put(domain, log)
+	defer func() { d.log.Put(domain, log) }()
 
 	if err != nil {
 		return nil, err
@@ -60,7 +60,7 @@ func (d *dnsServer) respondAAAA(domain string) (dns.RR, error) {
 		Time:  time.Now(),
 		Rcode: dns.RcodeServerFailure,
 	}
-	defer d.log.Put(domain, log)
+	defer func() { d.log.Put(domain, log) }()
 
 	if err != nil {
 		return nil, err
