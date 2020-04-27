@@ -7,6 +7,7 @@ import (
 	"github.com/skr.io7803/pointerpw/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 var ErrorUnsupportedQType = fmt.Errorf("unsupported QType")
@@ -14,10 +15,11 @@ var ErrorUnsupportedQType = fmt.Errorf("unsupported QType")
 type dnsServer struct {
 	dnsStore DnsStore
 	config   Config
+	log      DnsQueryLog
 }
 
-func NewDnsServiceServer(config Config, dnsStore DnsStore) pb.DnsServiceServer {
-	return &dnsServer{config: config, dnsStore: dnsStore}
+func NewDnsServiceServer(config Config, dnsStore DnsStore, log DnsQueryLog) pb.DnsServiceServer {
+	return &dnsServer{config: config, dnsStore: dnsStore, log: log}
 }
 
 func (d *dnsServer) respondA(domain string) (dns.RR, error) {
@@ -27,8 +29,20 @@ func (d *dnsServer) respondA(domain string) (dns.RR, error) {
 	}
 
 	if record.Ip4 == nil {
+		d.log.Put(domain, DnsQueryResult{
+			QType: dns.TypeA,
+			Time:  time.Now(),
+			Rcode: dns.RcodeServerFailure,
+		})
+
 		return nil, ErrorDnsRecordNotFound
 	}
+
+	d.log.Put(domain, DnsQueryResult{
+		QType: dns.TypeA,
+		Time:  time.Now(),
+		Rcode: dns.RcodeSuccess,
+	})
 
 	return &dns.A{
 		Hdr: dns.RR_Header{
@@ -48,8 +62,19 @@ func (d *dnsServer) respondAAAA(domain string) (dns.RR, error) {
 	}
 
 	if record.Ip6 == nil {
+		d.log.Put(domain, DnsQueryResult{
+			QType: dns.TypeAAAA,
+			Time:  time.Now(),
+			Rcode: dns.RcodeServerFailure,
+		})
 		return nil, ErrorDnsRecordNotFound
 	}
+
+	d.log.Put(domain, DnsQueryResult{
+		QType: dns.TypeAAAA,
+		Time:  time.Now(),
+		Rcode: dns.RcodeSuccess,
+	})
 
 	return &dns.AAAA{
 		Hdr: dns.RR_Header{

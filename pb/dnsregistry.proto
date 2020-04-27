@@ -17,7 +17,21 @@ message DnsReleaseRequest {
     string domain = 1;
 }
 
+message DnsGetLogRequest {
+    string domain = 1;
+}
+
+message DnsGetLogResponse {
+    message DnsLog {
+        uint32 qType = 1;
+        int64 timestamp = 2;
+        int32 rCode = 3;
+    }
+    repeated DnsLog log = 1;
+}
+
 service DnsRegistryService {
     rpc Assign (DnsAssignRequest) returns (google.protobuf.Empty);
     rpc Release (DnsReleaseRequest) returns (google.protobuf.Empty);
+    rpc GetLog (DnsGetLogRequest) returns (DnsGetLogResponse);
 }

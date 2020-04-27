@@ -15,10 +15,11 @@ var domainNameRegex = regexp.MustCompilePOSIX("^[A-Za-z0-9]+$")
 type dnsManagerService struct {
 	config   Config
 	dnsStore DnsStore
+	log      DnsQueryLog
 }
 
-func NewDnsRegistryServiceServer(config Config, dnsStore DnsStore) pb.DnsRegistryServiceServer {
-	return &dnsManagerService{config: config, dnsStore: dnsStore}
+func NewDnsRegistryServiceServer(config Config, dnsStore DnsStore, log DnsQueryLog) pb.DnsRegistryServiceServer {
+	return &dnsManagerService{config: config, dnsStore: dnsStore, log: log}
 }
 
 func (d *dnsManagerService) validateDomain(domain string) error {
@@ -92,4 +93,19 @@ func (d *dnsManagerService) Release(_ context.Context, request *pb.DnsReleaseReq
 	}
 
 	return &empty.Empty{}, nil
+}
+
+func (d *dnsManagerService) GetLog(_ context.Context, request *pb.DnsGetLogRequest) (*pb.DnsGetLogResponse, error) {
+	name := request.Domain
+	logs := d.log.GetAll(name)
+
+	result := make([]*pb.DnsGetLogResponse_DnsLog, len(logs))
+	for idx, v := range logs {
+		result[idx] = &pb.DnsGetLogResponse_DnsLog{}
+		result[idx].QType = uint32(v.QType)
+		result[idx].RCode = int32(v.Rcode)
+		result[idx].Timestamp = v.Time.Unix()
+	}
+
+	return &pb.DnsGetLogResponse{Log: result}, nil
 }

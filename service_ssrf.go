@@ -31,3 +31,7 @@ func (s *ssrfRegistryServer) Release(ctx context.Context, request *pb.SSRFReleas
 		Domain: request.Domain,
 	})
 }
+
+func (s *ssrfRegistryServer) GetLog(ctx context.Context, request *pb.DnsGetLogRequest) (*pb.DnsGetLogResponse, error) {
+	return s.srv.GetLog(ctx, request)
+}

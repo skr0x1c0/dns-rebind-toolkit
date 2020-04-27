@@ -33,6 +33,7 @@ func StartGRPC(address string) error {
 		DnsRoot: "dns.pointer.pw",
 	}
 	dnsStore := NewInMemoryDnsStore()
+	dnsQueryLog := NewInMemoryDnsQueryLog()
 	initStore(dnsStore)
 
 	server := grpc.NewServer(
@@ -42,10 +43,10 @@ func StartGRPC(address string) error {
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
 			grpczap.UnaryServerInterceptor(Logger.Desugar()),
 		)))
-	pb.RegisterDnsServiceServer(server, NewDnsServiceServer(config, dnsStore))
-	pb.RegisterDnsRegistryServiceServer(server, NewDnsRegistryServiceServer(config, dnsStore))
+	pb.RegisterDnsServiceServer(server, NewDnsServiceServer(config, dnsStore, dnsQueryLog))
+	pb.RegisterDnsRegistryServiceServer(server, NewDnsRegistryServiceServer(config, dnsStore, dnsQueryLog))
 	pb.RegisterSSRFRegistryServiceServer(server, NewSSRFRegistryServer(
-		NewDnsRegistryServiceServer(config, dnsStore)))
+		NewDnsRegistryServiceServer(config, dnsStore, dnsQueryLog)))
 
 	if err := server.Serve(listener); err != nil {
 		return fmt.Errorf("cannot start grpc server, error %v", err)

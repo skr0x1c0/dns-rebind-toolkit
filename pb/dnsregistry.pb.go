@@ -156,6 +156,163 @@ func (x *DnsReleaseRequest) GetDomain() string {
 	return ""
 }
 
+type DnsGetLogRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Domain string `protobuf:"bytes,1,opt,name=domain,proto3" json:"domain,omitempty"`
+}
+
+func (x *DnsGetLogRequest) Reset() {
+	*x = DnsGetLogRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_dnsregistry_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DnsGetLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DnsGetLogRequest) ProtoMessage() {}
+
+func (x *DnsGetLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_dnsregistry_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DnsGetLogRequest.ProtoReflect.Descriptor instead.
+func (*DnsGetLogRequest) Descriptor() ([]byte, []int) {
+	return file_dnsregistry_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *DnsGetLogRequest) GetDomain() string {
+	if x != nil {
+		return x.Domain
+	}
+	return ""
+}
+
+type DnsGetLogResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Log []*DnsGetLogResponse_DnsLog `protobuf:"bytes,1,rep,name=log,proto3" json:"log,omitempty"`
+}
+
+func (x *DnsGetLogResponse) Reset() {
+	*x = DnsGetLogResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_dnsregistry_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DnsGetLogResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DnsGetLogResponse) ProtoMessage() {}
+
+func (x *DnsGetLogResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_dnsregistry_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DnsGetLogResponse.ProtoReflect.Descriptor instead.
+func (*DnsGetLogResponse) Descriptor() ([]byte, []int) {
+	return file_dnsregistry_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *DnsGetLogResponse) GetLog() []*DnsGetLogResponse_DnsLog {
+	if x != nil {
+		return x.Log
+	}
+	return nil
+}
+
+type DnsGetLogResponse_DnsLog struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	QType     uint32 `protobuf:"varint,1,opt,name=qType,proto3" json:"qType,omitempty"`
+	Timestamp int64  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	RCode     int32  `protobuf:"varint,3,opt,name=rCode,proto3" json:"rCode,omitempty"`
+}
+
+func (x *DnsGetLogResponse_DnsLog) Reset() {
+	*x = DnsGetLogResponse_DnsLog{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_dnsregistry_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DnsGetLogResponse_DnsLog) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DnsGetLogResponse_DnsLog) ProtoMessage() {}
+
+func (x *DnsGetLogResponse_DnsLog) ProtoReflect() protoreflect.Message {
+	mi := &file_dnsregistry_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DnsGetLogResponse_DnsLog.ProtoReflect.Descriptor instead.
+func (*DnsGetLogResponse_DnsLog) Descriptor() ([]byte, []int) {
+	return file_dnsregistry_proto_rawDescGZIP(), []int{3, 0}
+}
+
+func (x *DnsGetLogResponse_DnsLog) GetQType() uint32 {
+	if x != nil {
+		return x.QType
+	}
+	return 0
+}
+
+func (x *DnsGetLogResponse_DnsLog) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *DnsGetLogResponse_DnsLog) GetRCode() int32 {
+	if x != nil {
+		return x.RCode
+	}
+	return 0
+}
+
 var File_dnsregistry_proto protoreflect.FileDescriptor
 
 var file_dnsregistry_proto_rawDesc = []byte{
@@ -173,16 +330,32 @@ var file_dnsregistry_proto_rawDesc = []byte{
 	0x63, 0x65, 0x4f, 0x6b, 0x22, 0x2b, 0x0a, 0x11, 0x44, 0x6e, 0x73, 0x52, 0x65, 0x6c, 0x65, 0x61,
 	0x73, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x64, 0x6f, 0x6d,
 	0x61, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69,
-	0x6e, 0x32, 0x86, 0x01, 0x0a, 0x12, 0x44, 0x6e, 0x73, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x72,
-	0x79, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x36, 0x0a, 0x06, 0x41, 0x73, 0x73, 0x69,
-	0x67, 0x6e, 0x12, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x6e, 0x73, 0x41, 0x73, 0x73, 0x69, 0x67,
-	0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
+	0x6e, 0x22, 0x2a, 0x0a, 0x10, 0x44, 0x6e, 0x73, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x22, 0x97, 0x01,
+	0x0a, 0x11, 0x44, 0x6e, 0x73, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x2e, 0x0a, 0x03, 0x6c, 0x6f, 0x67, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x1c, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x6e, 0x73, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x44, 0x6e, 0x73, 0x4c, 0x6f, 0x67, 0x52, 0x03,
+	0x6c, 0x6f, 0x67, 0x1a, 0x52, 0x0a, 0x06, 0x44, 0x6e, 0x73, 0x4c, 0x6f, 0x67, 0x12, 0x14, 0x0a,
+	0x05, 0x71, 0x54, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x71, 0x54,
+	0x79, 0x70, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x12, 0x14, 0x0a, 0x05, 0x72, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05,
+	0x52, 0x05, 0x72, 0x43, 0x6f, 0x64, 0x65, 0x32, 0xbd, 0x01, 0x0a, 0x12, 0x44, 0x6e, 0x73, 0x52,
+	0x65, 0x67, 0x69, 0x73, 0x74, 0x72, 0x79, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x36,
+	0x0a, 0x06, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x12, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x6e,
+	0x73, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16,
+	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
+	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x38, 0x0a, 0x07, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73,
+	0x65, 0x12, 0x15, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x6e, 0x73, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73,
+	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
 	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
-	0x12, 0x38, 0x0a, 0x07, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x12, 0x15, 0x2e, 0x70, 0x62,
-	0x2e, 0x44, 0x6e, 0x73, 0x52, 0x65, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x3b,
-	0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x12, 0x35, 0x0a, 0x06, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x12, 0x14, 0x2e, 0x70, 0x62, 0x2e,
+	0x44, 0x6e, 0x73, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x15, 0x2e, 0x70, 0x62, 0x2e, 0x44, 0x6e, 0x73, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x67, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x3b, 0x70, 0x62, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -197,22 +370,28 @@ func file_dnsregistry_proto_rawDescGZIP() []byte {
 	return file_dnsregistry_proto_rawDescData
 }
 
-var file_dnsregistry_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_dnsregistry_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_dnsregistry_proto_goTypes = []interface{}{
-	(*DnsAssignRequest)(nil),  // 0: pb.DnsAssignRequest
-	(*DnsReleaseRequest)(nil), // 1: pb.DnsReleaseRequest
-	(*empty.Empty)(nil),       // 2: google.protobuf.Empty
+	(*DnsAssignRequest)(nil),         // 0: pb.DnsAssignRequest
+	(*DnsReleaseRequest)(nil),        // 1: pb.DnsReleaseRequest
+	(*DnsGetLogRequest)(nil),         // 2: pb.DnsGetLogRequest
+	(*DnsGetLogResponse)(nil),        // 3: pb.DnsGetLogResponse
+	(*DnsGetLogResponse_DnsLog)(nil), // 4: pb.DnsGetLogResponse.DnsLog
+	(*empty.Empty)(nil),              // 5: google.protobuf.Empty
 }
 var file_dnsregistry_proto_depIdxs = []int32{
-	0, // 0: pb.DnsRegistryService.Assign:input_type -> pb.DnsAssignRequest
-	1, // 1: pb.DnsRegistryService.Release:input_type -> pb.DnsReleaseRequest
-	2, // 2: pb.DnsRegistryService.Assign:output_type -> google.protobuf.Empty
-	2, // 3: pb.DnsRegistryService.Release:output_type -> google.protobuf.Empty
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: pb.DnsGetLogResponse.log:type_name -> pb.DnsGetLogResponse.DnsLog
+	0, // 1: pb.DnsRegistryService.Assign:input_type -> pb.DnsAssignRequest
+	1, // 2: pb.DnsRegistryService.Release:input_type -> pb.DnsReleaseRequest
+	2, // 3: pb.DnsRegistryService.GetLog:input_type -> pb.DnsGetLogRequest
+	5, // 4: pb.DnsRegistryService.Assign:output_type -> google.protobuf.Empty
+	5, // 5: pb.DnsRegistryService.Release:output_type -> google.protobuf.Empty
+	3, // 6: pb.DnsRegistryService.GetLog:output_type -> pb.DnsGetLogResponse
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_dnsregistry_proto_init() }
@@ -245,6 +424,42 @@ func file_dnsregistry_proto_init() {
 				return nil
 			}
 		}
+		file_dnsregistry_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DnsGetLogRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_dnsregistry_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DnsGetLogResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_dnsregistry_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DnsGetLogResponse_DnsLog); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -252,7 +467,7 @@ func file_dnsregistry_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_dnsregistry_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -280,6 +495,7 @@ const _ = grpc.SupportPackageIsVersion6
 type DnsRegistryServiceClient interface {
 	Assign(ctx context.Context, in *DnsAssignRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	Release(ctx context.Context, in *DnsReleaseRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetLog(ctx context.Context, in *DnsGetLogRequest, opts ...grpc.CallOption) (*DnsGetLogResponse, error)
 }
 
 type dnsRegistryServiceClient struct {
@@ -308,10 +524,20 @@ func (c *dnsRegistryServiceClient) Release(ctx context.Context, in *DnsReleaseRe
 	return out, nil
 }
 
+func (c *dnsRegistryServiceClient) GetLog(ctx context.Context, in *DnsGetLogRequest, opts ...grpc.CallOption) (*DnsGetLogResponse, error) {
+	out := new(DnsGetLogResponse)
+	err := c.cc.Invoke(ctx, "/pb.DnsRegistryService/GetLog", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DnsRegistryServiceServer is the server API for DnsRegistryService service.
 type DnsRegistryServiceServer interface {
 	Assign(context.Context, *DnsAssignRequest) (*empty.Empty, error)
 	Release(context.Context, *DnsReleaseRequest) (*empty.Empty, error)
+	GetLog(context.Context, *DnsGetLogRequest) (*DnsGetLogResponse, error)
 }
 
 // UnimplementedDnsRegistryServiceServer can be embedded to have forward compatible implementations.
@@ -323,6 +549,9 @@ func (*UnimplementedDnsRegistryServiceServer) Assign(context.Context, *DnsAssign
 }
 func (*UnimplementedDnsRegistryServiceServer) Release(context.Context, *DnsReleaseRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Release not implemented")
+}
+func (*UnimplementedDnsRegistryServiceServer) GetLog(context.Context, *DnsGetLogRequest) (*DnsGetLogResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLog not implemented")
 }
 
 func RegisterDnsRegistryServiceServer(s *grpc.Server, srv DnsRegistryServiceServer) {
@@ -365,6 +594,24 @@ func _DnsRegistryService_Release_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DnsRegistryService_GetLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DnsGetLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DnsRegistryServiceServer).GetLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.DnsRegistryService/GetLog",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DnsRegistryServiceServer).GetLog(ctx, req.(*DnsGetLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _DnsRegistryService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.DnsRegistryService",
 	HandlerType: (*DnsRegistryServiceServer)(nil),
@@ -376,6 +623,10 @@ var _DnsRegistryService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Release",
 			Handler:    _DnsRegistryService_Release_Handler,
+		},
+		{
+			MethodName: "GetLog",
+			Handler:    _DnsRegistryService_GetLog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
