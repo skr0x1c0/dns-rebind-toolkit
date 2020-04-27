@@ -24,26 +24,23 @@ func NewDnsServiceServer(config Config, dnsStore DnsStore, log DnsQueryLog) pb.D
 
 func (d *dnsServer) respondA(domain string) (dns.RR, error) {
 	record, err := d.dnsStore.Get(domain)
+
+	log := DnsQueryResult{
+		QType: dns.TypeA,
+		Time:  time.Now(),
+		Rcode: dns.RcodeServerFailure,
+	}
+	defer d.log.Put(domain, log)
+
 	if err != nil {
 		return nil, err
 	}
 
 	if record.Ip4 == nil {
-		d.log.Put(domain, DnsQueryResult{
-			QType: dns.TypeA,
-			Time:  time.Now(),
-			Rcode: dns.RcodeServerFailure,
-		})
-
 		return nil, ErrorDnsRecordNotFound
 	}
 
-	d.log.Put(domain, DnsQueryResult{
-		QType: dns.TypeA,
-		Time:  time.Now(),
-		Rcode: dns.RcodeSuccess,
-	})
-
+	log.Rcode = dns.RcodeSuccess
 	return &dns.A{
 		Hdr: dns.RR_Header{
 			Name:   domain + "." + d.config.DnsRoot + ".",
@@ -57,25 +54,23 @@ func (d *dnsServer) respondA(domain string) (dns.RR, error) {
 
 func (d *dnsServer) respondAAAA(domain string) (dns.RR, error) {
 	record, err := d.dnsStore.Get(domain)
+
+	log := DnsQueryResult{
+		QType: dns.TypeAAAA,
+		Time:  time.Now(),
+		Rcode: dns.RcodeServerFailure,
+	}
+	defer d.log.Put(domain, log)
+
 	if err != nil {
 		return nil, err
 	}
 
 	if record.Ip6 == nil {
-		d.log.Put(domain, DnsQueryResult{
-			QType: dns.TypeAAAA,
-			Time:  time.Now(),
-			Rcode: dns.RcodeServerFailure,
-		})
 		return nil, ErrorDnsRecordNotFound
 	}
 
-	d.log.Put(domain, DnsQueryResult{
-		QType: dns.TypeAAAA,
-		Time:  time.Now(),
-		Rcode: dns.RcodeSuccess,
-	})
-
+	log.Rcode = dns.RcodeSuccess
 	return &dns.AAAA{
 		Hdr: dns.RR_Header{
 			Name:   domain + "." + d.config.DnsRoot + ".",
